@@ -8,15 +8,13 @@ pipeline {
                 }
             }
         }
-        stage('Build') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'mvn jetty:run &'
-            }
-        }
+       stage('Build') {
+    steps {
+        sh 'mvn clean package'
+    }
+}
+stage('Deploy') {
+    steps {
+        sh 'mvn jetty:run &'
     }
 }

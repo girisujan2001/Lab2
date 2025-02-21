@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     stages {
         stage('Checkout') {
             steps {
@@ -8,13 +9,15 @@ pipeline {
                 }
             }
         }
-       stage('Build') {
-    steps {
-        bat 'mvn clean package'
-    }
-}
-stage('Deploy') {
-    steps {
-        bat 'mvn jetty:run'
+        stage('Build') {
+            steps {
+                bat 'mvn clean package'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                bat 'mvn jetty:run'
+            }
+        }
     }
 }

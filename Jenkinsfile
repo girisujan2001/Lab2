@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    git credentialsId: 'github-pat', url: 'https://github.com/girisujan2001/Lab2'
+                    git credentialsId: '515f5f6d-2653-4d08-b08e-21879a1bc25e', url: 'https://github.com/girisujan2001/Lab2'
                 }
             }
         }

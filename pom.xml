@@ -44,7 +44,7 @@
                 <version>9.4.51.v20230217</version>
                 <configuration>
                     <httpConnector>
-                        <port>9191</port>  <!-- Changed from default 8080 -->
+                        <port>9090</port>  <!-- Changed from default 8080 -->
                     </httpConnector>
                 </configuration>
             </plugin>

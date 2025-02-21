@@ -4,7 +4,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/girisujan2001/COMP367_WebApp.git'
+                script {
+                    git credentialsId: 'github-pat', url: 'https://github.com/girisujan2001/COMP367_WebApp.git'
+                }
             }
         }
         stage('Build') {

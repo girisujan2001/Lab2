@@ -1,12 +1,11 @@
+ 
 pipeline {
     agent any
-    environment {
-        MAVEN_HOME = tool 'Maven3'
-    }
+
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'github-pat', url: 'https://github.com/girisujan2001/Lab2.git', branch: 'main'
+                git 'https://github.com/girisujan2001/Lab2.git'
             }
         }
         /*
@@ -24,9 +23,14 @@ pipeline {
                 bat 'mvn clean package'
             }
         }
+        stage('Test') {
+            steps {
+                bat 'mvn test'
+            }
+        }
         stage('Deploy') {
             steps {
-                bat 'mvn jetty:run &'
+                bat 'mvn jetty:run'
             }
         }
     }

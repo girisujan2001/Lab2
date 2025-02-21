@@ -10,11 +10,11 @@ pipeline {
         }
        stage('Build') {
     steps {
-        sh 'mvn clean package'
+        bat 'mvn clean package'
     }
 }
 stage('Deploy') {
     steps {
-        sh 'mvn jetty:run &'
+        bat 'mvn jetty:run'
     }
 }

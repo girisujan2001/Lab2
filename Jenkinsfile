@@ -1,37 +1,73 @@
- 
 pipeline {
     agent any
+
+    environment {
+        DOCKER_IMAGE = 'sgiri18/maven-java-app:latest'
+        DOCKER_CMD = 'docker'
+        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
+    }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/girisujan2001/Lab2.git'
+                git branch: 'main', url: 'https://github.com/girisujan2001/lab3.git'
             }
         }
-        /*
-        stage('Initialize') {
-            steps {
-                script {
-                    // REMOVE THIS STAGE: It's causing the error
-                    bat 'mvn archetype:generate -DgroupId=com.example -DartifactId=COMP367_WebApp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false'
-                }
-            }
-        }
-        */
-        stage('Build') {
+
+        stage('Build Maven Project') {
             steps {
                 bat 'mvn clean package'
             }
         }
-        stage('Test') {
+
+        stage('Docker Debug') {
             steps {
-                bat 'mvn test'
+                bat 'echo Current user: %USERNAME%'
+                bat 'echo PATH is: %PATH%'
+                bat "${DOCKER_CMD} --version"
+                bat "${DOCKER_CMD} images"
+                bat "${DOCKER_CMD} ps -a"
             }
         }
-        stage('Deploy') {
+
+        stage('Docker Login') {
             steps {
-                bat 'mvn jetty:run'
+                withCredentials([usernamePassword(
+                    credentialsId: "${DOCKER_CREDENTIALS_ID}",
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    bat """
+                        echo Logging in to Docker Hub...
+                        echo %DOCKER_PASS% | ${DOCKER_CMD} login -u %DOCKER_USER% --password-stdin
+                        echo Login Successful
+                    """
+                }
             }
+        }
+
+        stage('Docker Build') {
+            steps {
+                bat "${DOCKER_CMD} build -t ${DOCKER_IMAGE} ."
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                bat "${DOCKER_CMD} push ${DOCKER_IMAGE}"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed. Check logs for details."
+        }
+        cleanup {
+            bat "${DOCKER_CMD} system prune -f"
         }
     }
 }
